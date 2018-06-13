@@ -13,7 +13,7 @@ computation_cache[0] = 0  # Zero is a special case.
 @application.route("/api/Fibonacci", methods=["GET"])
 def get_fibonacci():
     try:
-        n = request.args.get("n")
+        n = int(request.args.get("n"))
         return calculate_fibonacci(n)
     except RecursionError:
         return "recursion error"
