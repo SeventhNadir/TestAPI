@@ -14,11 +14,11 @@ computation_cache[0] = 0  # Zero is a special case.
 def get_fibonacci():
     try:
         n = request.args.get("n")
-        return jsonify({"fibonacci": calculate_fibonacci(int(n))})
+        return calculate_fibonacci(n)
     except RecursionError:
-        return jsonify({"error": "n value created a recursion error."})
+        return "recursion error"
     except Exception:
-        return jsonify({"error": "invalid input"})
+        return "error"
 
 
 @application.route("/api/ReverseWords", methods=["GET"])
@@ -84,4 +84,5 @@ if __name__ == "__main__":
     # Setting debug to True enables debug output. This line should be
     # removed before deploying a production app.
     application.debug = True
+
     application.run()
