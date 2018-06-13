@@ -1,6 +1,5 @@
 from flask import Flask, jsonify, request
 
-
 # EB looks for an 'application' callable by default.
 application = Flask(__name__)
 
@@ -31,12 +30,18 @@ def get_reverse_words():
         return jsonify("Error")
 
 
+@application.route("/api/Token", methods=["GET"])
+def get_token():
+    #  If this was a secret, store in secrets file or env variable. Not needed here.
+    return jsonify("9730770d-13d5-4a7c-ba84-6850ba43dccb")
+
+
 @application.route("/api/TriangleType", methods=["GET"])
 def get_triangle_types():
     try:
         a, b, c = request.args.get("a"), request.args.get("b"), request.args.get("c")
         a, b, c = int(a), int(b), int(c)  # Convert to int and handle invalid input
-        for side in [a,b,c]:
+        for side in [a, b, c]:
             assert side > 0  # Assumption: Sides cannot have negative or zero length
 
         return jsonify(triangle_type(a, b, c))
@@ -60,7 +65,6 @@ def reverse_words(sentence):
     """For word in sentence, reverse letter order"""
     words = sentence.split(" ")
     reversed_words = [word[::-1] for word in words]
-    print(reversed_words)
     return " ".join(reversed_words)
 
 
