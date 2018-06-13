@@ -11,33 +11,37 @@ computation_cache = dict()
 computation_cache[0] = 0  # Zero is a special case.
 
 
-@application.route('/api/Fibonacci', methods=['GET'])
+@application.route("/api/Fibonacci", methods=["GET"])
 def get_fibonacci():
     try:
-        n = request.args.get('n')
-        return jsonify({'fibonacci': calculate_fibonacci(int(n))})
+        n = request.args.get("n")
+        return jsonify({"fibonacci": calculate_fibonacci(int(n))})
     except RecursionError:
-        return jsonify({'error': 'n value created a recursion error.'})
+        return jsonify({"error": "n value created a recursion error."})
     except Exception:
-        return jsonify({'error': 'invalid input'})
+        return jsonify({"error": "invalid input"})
 
-@application.route('/api/ReverseWords', methods=['GET'])
+
+@application.route("/api/ReverseWords", methods=["GET"])
 def get_reverse_words():
     try:
-        sentence = str(request.args.get('sentence'))
+        sentence = str(request.args.get("sentence"))
         return jsonify(reverse_words(sentence))
     except Exception:
-        return jsonify('Error')
+        return jsonify("Error")
 
-@application.route('/api/TriangleType', methods=['GET'])
+
+@application.route("/api/TriangleType", methods=["GET"])
 def get_triangle_types():
     try:
-        a, b, c = request.args.get('a'), request.args.get('b'), request.args.get('c')
-        a, b, c = int(a), int(b), int(c)
-        return jsonify(triangle_type(a,b,c))
-    except Exception:
-        return jsonify('Error')
+        a, b, c = request.args.get("a"), request.args.get("b"), request.args.get("c")
+        a, b, c = int(a), int(b), int(c)  # Convert to int and handle invalid input
+        for side in [a,b,c]:
+            assert a > 0  # Assumption: Sides cannot have negative or zero length
 
+        return jsonify(triangle_type(a, b, c))
+    except Exception:
+        return jsonify("The request is invalid")
 
 
 def calculate_fibonacci(n):
@@ -54,29 +58,22 @@ def calculate_fibonacci(n):
 
 def reverse_words(sentence):
     """For word in sentence, reverse letter order"""
-    words = sentence.split(' ')
+    words = sentence.split(" ")
     reversed_words = [word[::-1] for word in words]
     print(reversed_words)
     return " ".join(reversed_words)
 
-def triangle_type(a,b,c):
 
-    for arg in [a, b, c]:  # sanitize input
-        if type(arg) != int:
-            return "Error: Type Error"
-        if arg <= 0:
-            return "Error: Value Error"
+def triangle_type(a, b, c):
 
-    def calculate_triangle_type(a,b,c):
+    if a == b and b == c:  # a == c not required due to transitive property
+        return "Equilateral"
+    if a == b or a == c or b == c:
+        return "Isoceles"
+    else:  # Invalid input would return "Scalene" if not checked in calling function
+        return "Scalene"
 
-        if a == b and b == c: # a == c not required due to transitive property
-            return "Equilateral"
-        if a == b or a == c or b == c:
-            return "Isoceles"
-        else: # Invalid input will return "Scalene" if not checked in calling function
-            return "Scalene"
-
-    return calculate_triangle_type(a,b,c)
+    return calculate_triangle_type(a, b, c)
 
 
 if __name__ == "__main__":
