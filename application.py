@@ -37,7 +37,7 @@ def get_triangle_types():
         a, b, c = request.args.get("a"), request.args.get("b"), request.args.get("c")
         a, b, c = int(a), int(b), int(c)  # Convert to int and handle invalid input
         for side in [a,b,c]:
-            assert a > 0  # Assumption: Sides cannot have negative or zero length
+            assert side > 0  # Assumption: Sides cannot have negative or zero length
 
         return jsonify(triangle_type(a, b, c))
     except Exception:
